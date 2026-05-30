@@ -1,4 +1,4 @@
-:root { 
+ :root { 
     --p1: #00f3ff; 
     --p2: #ff00f7; 
     --ui-aura: rgba(173, 216, 230, 0.4); 

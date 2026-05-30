@@ -1,98 +1,278 @@
-:root { 
-    --p1: #00f3ff; 
-    --p2: #ff00f7; 
-    --ui-aura: rgba(173, 216, 230, 0.4); 
+/*
+  ========================================================================
+  FILE: style.css
+  PURPOSE: This contains the CSS Variables (Design Tokens), resets, and 
+  complex keyframe animations. It is strictly organized by component.
+  ========================================================================
+*/
+
+/* --- 1. DESIGN TOKENS (CSS VARIABLES) --- */
+/* Professional developers use variables so colors can be changed instantly everywhere */
+:root {
+    /* Backgrounds */
+    --color-void: #050508;
+    --color-glass: rgba(15, 15, 25, 0.75);
+    
+    /* Player 1 Theme (Cyan/Blue) */
+    --p1-primary: #00f3ff;
+    --p1-secondary: #0055ff;
+    --p1-shadow: rgba(0, 243, 255, 0.5);
+    
+    /* Player 2 Theme (Magenta/Red) */
+    --p2-primary: #ff0055;
+    --p2-secondary: #ff0000;
+    --p2-shadow: rgba(255, 0, 85, 0.5);
+    
+    /* Typography */
+    --font-cyber: 'Orbitron', system-ui, sans-serif;
+    
+    /* Animation Timings */
+    --easing-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --transition-fast: 0.2s ease;
 }
 
-body { 
-    margin: 0; 
-    background: #000 url('https://images.alphacoders.com/906/906100.jpg') no-repeat center center fixed; 
-    background-size: cover;
-    color: white; 
-    font-family: 'Orbitron', sans-serif; 
-    height: 100vh; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
+/* --- 2. GLOBAL RESET & ACCESSIBILITY --- */
+/* Resets browser defaults to ensure consistency across all phones */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* Disable user selection to make it feel like a native app */
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    background-color: var(--color-void);
+    color: #ffffff;
+    font-family: var(--font-cyber);
+    /* Prevents the rubber-band scrolling effect on mobile */
     overflow: hidden; 
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
 }
 
-/* --- UI OVERLAY --- */
-.overlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.4); z-index: -1;
+/* --- 3. HARDWARE CANVAS --- */
+/* Fixed strictly to the background so particles render behind UI */
+#fx-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0; /* Lowest layer */
+    pointer-events: none; /* Allows clicks to pass through to buttons */
 }
 
-.screen { 
-    display: none; width: 100%; height: 100%; flex-direction: column; 
-    align-items: center; justify-content: center; position: absolute; 
-}
-.active { display: flex; }
-
-/* GLASS MORPHISM CARDS */
-.card { 
-    background: rgba(0, 0, 0, 0.75); 
-    border: 2px solid var(--p1); 
-    padding: 30px; 
-    border-radius: 20px; 
-    text-align: center; 
-    width: 280px; 
+/* --- 4. OVERLAYS & GLASSMORPHISM --- */
+.overlay-layer {
+    position: fixed;
+    z-index: 9999; /* Highest layer */
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    display: none; /* Hidden by default, activated by JS class */
+    justify-content: center;
+    align-items: center;
     backdrop-filter: blur(10px);
-    box-shadow: 0 0 20px var(--ui-aura);
+}
+.overlay-layer.active {
+    display: flex;
 }
 
-.theme-title { color: var(--p1); }
-
-input { 
-    background: rgba(255,255,255,0.1); border: 1px solid var(--p1); 
-    color: white; padding: 12px; border-radius: 8px; width: 85%; 
-    margin-bottom: 15px; text-align: center; font-family: 'Orbitron'; 
+.glass-terminal {
+    background: var(--color-glass);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 300px;
 }
 
-.btn { 
-    display: block; width: 100%; padding: 15px; margin: 5px 0; 
-    background: rgba(0, 243, 255, 0.1); border: 1px solid var(--p1); 
-    color: var(--p1); border-radius: 10px; cursor: pointer; font-weight: bold; 
+.system-title {
+    color: var(--p1-primary);
+    text-shadow: 0 0 10px var(--p1-shadow);
+    margin-bottom: 15px;
+    letter-spacing: 2px;
+}
+
+.system-logs {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+    font-family: monospace;
+}
+
+.hyper-btn {
+    margin-top: 25px;
+    padding: 15px 30px;
+    background: transparent;
+    border: 2px solid var(--p1-primary);
+    color: white;
+    font-family: var(--font-cyber);
+    font-size: 1.1rem;
+    font-weight: 900;
+    cursor: pointer;
+    transition: var(--transition-fast);
+    box-shadow: inset 0 0 0 rgba(0,243,255,0);
+}
+.hyper-btn:active {
+    background: var(--p1-primary);
+    color: #000;
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.5);
+}
+
+/* --- 5. COMBAT ARENA STRUCTURE --- */
+.combat-arena {
+    width: 100%;
+    max-width: 600px; /* Constrains width on tablets/desktops */
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 10;
+}
+
+.player-sector {
+    flex: 1; /* Takes up exactly 50% of the screen */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 40px 20px;
+    transition: background 0.5s ease;
+}
+/* Flips the top player completely upside down for local multiplayer */
+.p2-sector {
+    transform: rotate(180deg); 
+}
+
+/* Dynamic Rage Backgrounds triggered by JS */
+.rage-active-p1 { background: radial-gradient(circle at bottom, rgba(0, 243, 255, 0.1) 0%, transparent 70%); }
+.rage-active-p2 { background: radial-gradient(circle at bottom, rgba(255, 0, 85, 0.1) 0%, transparent 70%); }
+
+/* --- 6. HEALTH & HUD COMPONENT --- */
+.sector-hud {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.combo-tracker {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 700;
+    letter-spacing: 1px;
+    transition: var(--transition-fast);
+}
+/* Activated when a player wins consecutively */
+.combo-highlight {
+    color: #ffea00;
+    text-shadow: 0 0 10px #ffea00;
+    transform: scale(1.1);
+}
+
+.health-armor-layer {
+    width: 90%;
+    height: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #444;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.health-fluid {
+    height: 100%;
+    width: 100%; /* Default 100% width, reduced by JavaScript */
+    transition: width 0.6s var(--easing-spring);
+}
+.p1-fluid { background: linear-gradient(90deg, var(--p1-secondary), var(--p1-primary)); box-shadow: 0 0 15px var(--p1-shadow); }
+.p2-fluid { background: linear-gradient(90deg, var(--p2-secondary), var(--p2-primary)); box-shadow: 0 0 15px var(--p2-shadow); }
+
+/* --- 7. WEAPON ARRAY BUTTONS --- */
+.weapon-array {
+    display: flex;
+    gap: 15px;
+}
+
+.attack-input {
+    width: 80px;
+    height: 80px;
+    border-radius: 16px;
+    font-size: 3rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    transition: var(--transition-fast);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* Touch interaction styles */
+.attack-input:active {
+    transform: scale(0.9);
+    background: rgba(255, 255, 255, 0.1);
+}
+/* Applied by JS when a player locks in a choice */
+.attack-input.locked-in {
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.2);
+    transform: scale(0.95);
+    box-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+
+.system-status {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    color: #555;
     text-transform: uppercase;
 }
-.btn:hover { 
-    background: var(--p1); color: #000; box-shadow: 0 0 15px var(--p1); 
+
+/* --- 8. IMPACT HORIZON (Center Divider) --- */
+.impact-horizon {
+    height: 2px;
+    background: rgba(255, 255, 255, 0.2);
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* --- COMBAT HUD --- */
-.hud { position: absolute; width: 100%; max-width: 400px; padding: 15px; z-index: 10; }
-.top { top: 0; transform: rotate(180deg); }
-.bottom { bottom: 0; }
-
-.hp-bar { 
-    height: 16px; background: rgba(0,0,0,0.8); border-radius: 8px; 
-    overflow: hidden; border: 1px solid #fff; margin: 5px 0; 
-}
-.fill { 
-    height: 100%; width: 100%; 
-    transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+#global-announcer {
+    background: var(--color-void);
+    border: 2px solid #444;
+    padding: 5px 20px;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    transition: var(--transition-fast);
 }
 
-/* Specific Health Bar Colors */
-#p1-fill { background: linear-gradient(90deg, #00f3ff, #80f9ff); }
-#p2-fill { background: linear-gradient(90deg, #ff00f7, #ff80fb); }
-
-.moves { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.m-btn { 
-    background: rgba(0,0,0,0.6); border: 2px solid white; color: white; 
-    padding: 20px; border-radius: 15px; font-size: 1.8rem; cursor: pointer;
-    backdrop-filter: blur(5px);
+/* --- 9. TRAUMA (SCREEN SHAKE) ANIMATIONS --- */
+@keyframes traumaShake {
+    0% { transform: translate(3px, 3px) rotate(0deg); }
+    10% { transform: translate(-5px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
 }
-
-#status-msg { 
-    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); 
-    text-align: center; width: 100%; color: #fff; font-size: 1.5rem; 
-    text-shadow: 0 0 10px var(--p1), 0 0 20px #000; font-weight: 900;
-}
-
-/* Reload Button Styling */
-.reload-btn {
-    position: absolute; right: 10px; top: 50%; 
-    background: rgba(0,0,0,0.5); border: 1px solid white; 
-    color: white; border-radius: 50%; width: 40px; height: 40px; cursor: pointer;
+.trauma-applied {
+    /* Uses a custom cubic-bezier for a sharp snap followed by a smooth finish */
+    animation: traumaShake 0.5s cubic-bezier(.36,.07,.19,.97) both;
 }

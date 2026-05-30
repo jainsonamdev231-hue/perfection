@@ -2,70 +2,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NEXUS: ULTRA INSTINCT</title>
     
-    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    
+    <meta name="theme-color" content="#0a0a0f">
+    
+    <title>NEXUS: RAGE ENGINE (Ultimate Edition)</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="overlay"></div>
+    <canvas id="fx-canvas" aria-hidden="true"></canvas>
 
-    <div id="scr-login" class="screen active">
-        <div class="card">
-            <h2 class="theme-title">UI SENSORY LOGIN</h2>
-            <input type="text" id="username" placeholder="FIGHTER NAME">
-            <button class="btn" onclick="app.login()">AWAKEN</button>
+    <div id="boot-screen" class="overlay-layer active">
+        <div class="glass-terminal">
+            <h1 class="system-title">SYSTEM ONLINE</h1>
+            <p class="system-logs">Loading audio drivers...</p>
+            <p class="system-logs">Calibrating physics engine...</p>
+            <button class="hyper-btn" id="btn-engage">ENGAGE OVERRIDE</button>
         </div>
     </div>
 
-    <div id="scr-menu" class="screen">
-        <div class="card">
-            <h3 id="user-display">---</h3>
-            <button class="btn" onclick="app.startMode('OFFLINE')">🕹️ VS CPU</button>
-            <button class="btn" onclick="app.startMode('LOCAL')">⚔️ 1V1 LOCAL</button>
-            <button class="btn" onclick="app.showOnline()">🌍 ONLINE BATTLE</button>
-        </div>
-    </div>
-
-    <div id="scr-online" class="screen">
-        <div class="card">
-            <p>BATTLE ID:<br><b id="my-word-id" class="theme-title">---</b></p>
-            <input type="text" id="target-id" placeholder="OPPONENT ID">
-            <button class="btn" onclick="app.connect()">ESTABLISH LINK</button>
-            <button class="btn" onclick="app.showMenu()">BACK</button>
-        </div>
-    </div>
-
-    <div id="scr-game" class="screen">
-        <div class="hud top">
-            <div class="hp-bar">
-                <div id="p2-fill" class="fill"></div>
-            </div>
-            <div class="moves" id="p2-btns">
-                <button class="m-btn" onclick="app.input(2,'stone')">✊</button>
-                <button class="m-btn" onclick="app.input(2,'paper')">✋</button>
-                <button class="m-btn" onclick="app.input(2,'scissors')">✌️</button>
-            </div>
-        </div>
+    <main class="combat-arena">
         
-        <div id="status-msg">INSTINCT ACTIVATED</div>
+        <section class="player-sector p2-sector" id="sector-p2">
+            
+            <header class="sector-hud">
+                <div class="combo-tracker" id="p2-combo-text">COMBO MULTIPLIER: 0.0x</div>
+                <div class="health-armor-layer">
+                    <div class="health-fluid p2-fluid" id="p2-health-fill"></div>
+                </div>
+            </header>
 
-        <div class="hud bottom">
-            <div class="moves">
-                <button class="m-btn" onclick="app.input(1,'stone')">✊</button>
-                <button class="m-btn" onclick="app.input(1,'paper')">✋</button>
-                <button class="m-btn" onclick="app.input(1,'scissors')">✌️</button>
-            </div>
-            <div class="hp-bar">
-                <div id="p1-fill" class="fill"></div>
-            </div>
+            <nav class="weapon-array">
+                <button class="attack-input" data-player="2" data-move="rock" aria-label="Rock">✊</button>
+                <button class="attack-input" data-player="2" data-move="paper" aria-label="Paper">✋</button>
+                <button class="attack-input" data-player="2" data-move="scissors" aria-label="Scissors">✌️</button>
+            </nav>
+
+            <footer class="system-status" id="p2-status-display">AWAITING NEURAL LINK</footer>
+        </section>
+
+        <div class="impact-horizon">
+            <div id="global-announcer">VS</div>
         </div>
-        
-        <button class="reload-btn" onclick="location.reload()">✖</button>
-    </div>
+
+        <section class="player-sector p1-sector" id="sector-p1">
+            
+            <header class="system-status" id="p1-status-display">AWAITING NEURAL LINK</header>
+
+            <nav class="weapon-array">
+                <button class="attack-input" data-player="1" data-move="rock" aria-label="Rock">✊</button>
+                <button class="attack-input" data-player="1" data-move="paper" aria-label="Paper">✋</button>
+                <button class="attack-input" data-player="1" data-move="scissors" aria-label="Scissors">✌️</button>
+            </nav>
+
+            <footer class="sector-hud">
+                <div class="health-armor-layer">
+                    <div class="health-fluid p1-fluid" id="p1-health-fill"></div>
+                </div>
+                <div class="combo-tracker" id="p1-combo-text">COMBO MULTIPLIER: 0.0x</div>
+            </footer>
+        </section>
+
+    </main>
 
     <script src="script.js"></script>
 </body>

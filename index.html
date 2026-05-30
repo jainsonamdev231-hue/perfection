@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NEXUS: ULTRA INSTINCT</title>
+    
+    <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="overlay"></div>
+
+    <div id="scr-login" class="screen active">
+        <div class="card">
+            <h2 class="theme-title">UI SENSORY LOGIN</h2>
+            <input type="text" id="username" placeholder="FIGHTER NAME">
+            <button class="btn" onclick="app.login()">AWAKEN</button>
+        </div>
+    </div>
+
+    <div id="scr-menu" class="screen">
+        <div class="card">
+            <h3 id="user-display">---</h3>
+            <button class="btn" onclick="app.startMode('OFFLINE')">🕹️ VS CPU</button>
+            <button class="btn" onclick="app.startMode('LOCAL')">⚔️ 1V1 LOCAL</button>
+            <button class="btn" onclick="app.showOnline()">🌍 ONLINE BATTLE</button>
+        </div>
+    </div>
+
+    <div id="scr-online" class="screen">
+        <div class="card">
+            <p>BATTLE ID:<br><b id="my-word-id" class="theme-title">---</b></p>
+            <input type="text" id="target-id" placeholder="OPPONENT ID">
+            <button class="btn" onclick="app.connect()">ESTABLISH LINK</button>
+            <button class="btn" onclick="app.showMenu()">BACK</button>
+        </div>
+    </div>
+
+    <div id="scr-game" class="screen">
+        <div class="hud top">
+            <div class="hp-bar">
+                <div id="p2-fill" class="fill"></div>
+            </div>
+            <div class="moves" id="p2-btns">
+                <button class="m-btn" onclick="app.input(2,'stone')">✊</button>
+                <button class="m-btn" onclick="app.input(2,'paper')">✋</button>
+                <button class="m-btn" onclick="app.input(2,'scissors')">✌️</button>
+            </div>
+        </div>
+        
+        <div id="status-msg">INSTINCT ACTIVATED</div>
+
+        <div class="hud bottom">
+            <div class="moves">
+                <button class="m-btn" onclick="app.input(1,'stone')">✊</button>
+                <button class="m-btn" onclick="app.input(1,'paper')">✋</button>
+                <button class="m-btn" onclick="app.input(1,'scissors')">✌️</button>
+            </div>
+            <div class="hp-bar">
+                <div id="p1-fill" class="fill"></div>
+            </div>
+        </div>
+        
+        <button class="reload-btn" onclick="location.reload()">✖</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
